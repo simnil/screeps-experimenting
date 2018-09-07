@@ -1,5 +1,6 @@
 // MODULES, PARAMETERS, CONSTANTS AND SETS
 // ---------------------------------------------------------
+var utils = require('utils');
 var roles = { harvester1: require('role.harvester1'),
               upgrader1: require('role.upgrader1') };
 
@@ -11,6 +12,8 @@ var minCreeps = { harvester1: 2,
 // MAIN LOOP
 // ---------------------------------------------------------
 var main = function(spawner) {
+    if (spawner.memory.cumulativeSourceDistribution == undefined)
+        utils.computeSourceDistribution(spawner);
 
     if (!spawner.spawning
         && !maintainMinimumCreepCount(spawner))
@@ -22,12 +25,11 @@ var main = function(spawner) {
 // ---------------------------------------------------------
 var maintainMinimumCreepCount = function(spawner) {
     for (var i = 0; i < rolePriorityOrder.length; i++) {
-        var role = rolePriorityOrder[i];
-        var numCreepsWithRole = _.sum(Game.creeps, (c) => c.memory.role == role);
+        let role = rolePriorityOrder[i];
+        let numCreepsWithRole = _.sum(Game.creeps, (c) => c.memory.role == role);
 
-        if (numCreepsWithRole < minCreeps[role] && !spawner.spawning) {
-            // TODO provide custom spawn function in role module
-            var status = roles[role].spawn(spawner);
+        if (numCreepsWithRole < minCreeps[role]) {
+            let status = roles[role].spawn(spawner);
             if (status == OK)
                 console.log('Spawning creep type: ' + role);
             return true;
@@ -38,20 +40,9 @@ var maintainMinimumCreepCount = function(spawner) {
 
 var spawnExtraCreeps = function(spawner) {
     if (spawner.room.energyAvailable > 0.9*spawner.room.energyCapacityAvailable) {
-        // TODO put spawner function in role module
-        var role = 'upgrader1';
-        var name = role + Game.time;
-        var status = spawner.spawnCreep([WORK, CARRY, MOVE], name, {
-            memory: { role: role }});
+        let status = roles['upgrader1'].spawn(spawner);
         if (status == OK)
-            console.log('Spawning extra ' + role + ': ' + name);
-    }
-};
-
-var updateCreeps = function() {
-    for (var name in Game.creeps) {
-        var creep = Game.creeps[name];
-        roles[creep.memory.role].run(creep);
+            console.log('Spawning extra upgrader1');
     }
 };
 
