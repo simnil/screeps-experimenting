@@ -1,0 +1,17 @@
+#!/bin/bash
+script_dir=$(dirname ${BASH_SOURCE[0]})
+
+error_message_and_exit() {
+    echo "Error! Cannot compare with production branch: $1"
+    exit 1
+}
+
+if [ ! -h ${script_dir}/../screeps_live ]; then
+    error_message_and_exit "missing symlink to live environment"
+fi
+
+if [ ! -d ${script_dir}/../screeps_live/screeps.com/testing ]; then
+    error_message_and_exit "missing production branch"
+fi
+
+meld "${script_dir}"/ "${script_dir}"/../screeps_live/screeps.com/production/
