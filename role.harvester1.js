@@ -48,7 +48,7 @@ var spawn = function(spawner) {
     return spawner.spawnCreep(BODY_COMPOSITION, ROLE_NAME+'-'+Game.time, {
         memory: {
             role:  ROLE_NAME,
-            state: 0,
+            state: STATE_HARVEST,
             home:  spawner,
             designatedSource: utils.chooseHarvestSource(spawner)
         }});
