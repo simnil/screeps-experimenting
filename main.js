@@ -1,10 +1,11 @@
 // MODULES, PARAMETERS, CONSTANTS AND SETS
 // ---------------------------------------------------------
 var colonies = { initial: require('colony.initial'),
-                 basic: require('colony.initial') }; // @incomplete: temporarily does the same thing
+                 basic: require('colony.basic') };
 
 var roles = { harvester1: require('role.harvester1'),
-              upgrader1: require('role.upgrader1') };
+              upgrader1: require('role.upgrader1'),
+              builder1: require('role.builder1') };
 
 
 // MAIN LOOP
@@ -13,10 +14,10 @@ var main = function() {
 
     clearDeadCreepsFromMemory();
 
-    for (var spawnerName in Game.spawns) {
-        var spawner = Game.spawns[spawnerName];
+    for (let spawnerName in Game.spawns) {
+        let spawner = Game.spawns[spawnerName];
 
-        var controllerLevel = spawner.room.controller.level;
+        let controllerLevel = spawner.room.controller.level;
         if (controllerLevel == 1)
             colonies['initial'].main(spawner);
         else // @incomplete: only 2 stages of a colony
@@ -30,7 +31,7 @@ var main = function() {
 // FUNCTIONS
 // ---------------------------------------------------------
 var clearDeadCreepsFromMemory = function() {
-    for (var name in Memory.creeps)
+    for (let name in Memory.creeps)
         if (!Game.creeps[name]) {
             delete Memory.creeps[name];
             console.log('Clearing non-existing creep memory: ' + name)
@@ -38,8 +39,8 @@ var clearDeadCreepsFromMemory = function() {
 };
 
 var updateCreeps = function() {
-    for (var name in Game.creeps) {
-        var creep = Game.creeps[name];
+    for (let name in Game.creeps) {
+        let creep = Game.creeps[name];
         roles[creep.memory.role].run(creep);
     }
 };
