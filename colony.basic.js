@@ -27,7 +27,7 @@ var main = function(spawner)
             && numBuilders < maxCreeps['builder1']) {
             let status = roles['builder1'].spawn(spawner);
             if (status == OK)
-                console.log('Spawning builder1');
+                console.log('Spawning creep type: builder1');
         }
     }
 };
