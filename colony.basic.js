@@ -10,7 +10,7 @@ var minCreeps = { harvester1: 3,
                   builder1: 0 };
 var maxCreeps = { harvester1: 4,
                   upgrader1: 4,
-                  builder1: 3 };
+                  builder1: 6 };
 
 
 // MAIN LOOP
