@@ -33,6 +33,7 @@ var run = function(creep) {
                 creep.moveTo(targets[0]);
             }
         }
+        else creep.moveTo(Game.getObjectById(creep.memory.home.id));
     }
 
     if (creep.carry.energy == 0)
