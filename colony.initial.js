@@ -11,7 +11,8 @@ var minCreeps = { harvester1: 2,
 
 // MAIN LOOP
 // ---------------------------------------------------------
-var main = function(spawner) {
+var main = function(spawner)
+{
     if (spawner.memory.cumulativeSourceDistribution == undefined)
         utils.computeSourceDistribution(spawner);
 
@@ -23,7 +24,8 @@ var main = function(spawner) {
 
 // FUNCTIONS
 // ---------------------------------------------------------
-var maintainMinimumCreepCount = function(spawner) {
+var maintainMinimumCreepCount = function(spawner)
+{
     for (var i = 0; i < rolePriorityOrder.length; i++) {
         let role = rolePriorityOrder[i];
         let numCreepsWithRole = _.sum(Game.creeps, (c) => c.memory.role == role);
@@ -38,7 +40,8 @@ var maintainMinimumCreepCount = function(spawner) {
     return false;
 };
 
-var spawnExtraCreeps = function(spawner) {
+var spawnExtraCreeps = function(spawner)
+{
     if (spawner.room.energyAvailable > 0.9*spawner.room.energyCapacityAvailable) {
         let status = roles['upgrader1'].spawn(spawner);
         if (status == OK)

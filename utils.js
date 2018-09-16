@@ -5,7 +5,8 @@ var ROOM_SIZE = 50;
 
 // FUNCTIONS
 // ---------------------------------------------------------
-var computeSourceDistribution = function(spawner) {
+var computeSourceDistribution = function(spawner)
+{
     let cumulativeSourceGains = []; // Gain = 1 / movement cost
     let totalGain = 0;
     let sources = spawner.room.find(FIND_SOURCES);
@@ -26,7 +27,8 @@ var computeSourceDistribution = function(spawner) {
     spawner.memory.cumulativeSourceDistribution = cumulativeSourceGains;
 };
 
-var chooseHarvestSource = function(spawner) {
+var chooseHarvestSource = function(spawner)
+{
     var sources = spawner.room.find(FIND_SOURCES);
     if (spawner.memory.cumulativeSourceDistribution != undefined) {
         let r = Math.random();
@@ -38,11 +40,13 @@ var chooseHarvestSource = function(spawner) {
     else return sources[0];
 };
 
-var pos2int = function(roomPos) {
+var pos2int = function(roomPos)
+{
     return ROOM_SIZE * roomPos.y + roomPos.x;
 };
 
-var int2pos = function(roomName, i) {
+var int2pos = function(roomName, i)
+{
     let x = i % ROOM_SIZE;
     let y = Math.floor(i / ROOM_SIZE);
     return Game.rooms[roomName].getPositionAt(x, y);

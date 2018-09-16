@@ -10,7 +10,8 @@ var STATE_RETURN  = 2;
 
 // FUNCTIONS
 // ---------------------------------------------------------
-var run = function(creep) {
+var run = function(creep)
+{
     let constrSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
     checkStateTransitionConditions(creep, constrSites);
 
@@ -34,7 +35,8 @@ var run = function(creep) {
     }
 };
 
-var checkStateTransitionConditions = function(creep, constrSites) {
+var checkStateTransitionConditions = function(creep, constrSites)
+{
     if (constrSites.length == 0) {
         creep.memory.state = STATE_RETURN;
         delete creep.memory.constrSite;
@@ -72,7 +74,8 @@ var checkStateTransitionConditions = function(creep, constrSites) {
     }
 };
 
-var collectEnergy = function(creep) {
+var collectEnergy = function(creep)
+{
     if (creep.memory.closestSource == undefined) {
         let constructionLocation = Game.getObjectById(creep.memory.constrSite.id).pos;
         creep.memory.closestSource = findClosestSourceFrom(constructionLocation, creep);
@@ -82,20 +85,23 @@ var collectEnergy = function(creep) {
         creep.moveTo(closestSource);
 };
 
-var findClosestSourceFrom = function(pos, creep) {
+var findClosestSourceFrom = function(pos, creep)
+{
     let closestSource = pos.findClosestByPath(FIND_SOURCES);
     if (closestSource == null)
         closestSource = pos.findClosestByRange(FIND_SOURCES);
     return closestSource;
 };
 
-var build = function(creep) {
+var build = function(creep)
+{
     let constructionTarget = Game.getObjectById(creep.memory.constrSite.id);
     if (creep.build(constructionTarget) == ERR_NOT_IN_RANGE)
         creep.moveTo(constructionTarget);
 };
 
-var returnAndRecycle = function(creep) {
+var returnAndRecycle = function(creep)
+{
     let spawner = Game.getObjectById(creep.memory.home.id);
     if ((creep.carryCapacity > 0
          && creep.transfer(spawner, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
@@ -103,7 +109,8 @@ var returnAndRecycle = function(creep) {
         creep.moveTo(spawner);
 };
 
-var spawn = function(spawner) {
+var spawn = function(spawner)
+{
     let testStatus = spawner.spawnCreep(BODY_COMPOSITION, 'dummy',
                                         { dryRun: true });
     if (testStatus != OK) return testStatus;
@@ -117,11 +124,13 @@ var spawn = function(spawner) {
     });
 };
 
-var chooseConstructionSite = function(creep, constrSites) {
+var chooseConstructionSite = function(creep, constrSites)
+{
     return constrSites[0]; // TODO
 };
 
-var stateErrorPrint = function(creep) {
+var stateErrorPrint = function(creep)
+{
     console.log('State Error: missing state for ' + ROLE_NAME + '. '
                 + 'creep: ' + creep.name
                 + ', state: ' + creep.memory.state);

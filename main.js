@@ -12,7 +12,8 @@ var MAX_NUM_PLANNED_PATHS = 10;
 
 // MAIN LOOP
 // ---------------------------------------------------------
-var main = function() {
+var main = function()
+{
     clearDeadCreepsFromMemory();
     initializePheromoneTrails();
 
@@ -34,7 +35,8 @@ var main = function() {
 
 // FUNCTIONS
 // ---------------------------------------------------------
-var clearDeadCreepsFromMemory = function() {
+var clearDeadCreepsFromMemory = function()
+{
     for (let name in Memory.creeps)
         if (!Game.creeps[name]) {
             delete Memory.creeps[name];
@@ -42,7 +44,8 @@ var clearDeadCreepsFromMemory = function() {
         }
 };
 
-var initializePheromoneTrails = function() {
+var initializePheromoneTrails = function()
+{
     if (Memory.pheromoneTrails == undefined)
         Memory.pheromoneTrails = {};
 
@@ -53,14 +56,16 @@ var initializePheromoneTrails = function() {
     }
 };
 
-var numberOfPlannedPaths = function() {
+var numberOfPlannedPaths = function()
+{
     let roads = Game.spawns['Spawn1'].room.find(FIND_MY_CONSTRUCTION_SITES, {
         filter: { structureType: STRUCTURE_ROAD }
     });
     return roads.length;
 };
 
-var updateCreeps = function() {
+var updateCreeps = function()
+{
     for (let name in Game.creeps) {
         let creep = Game.creeps[name];
         roles[creep.memory.role].run(creep);
@@ -68,11 +73,13 @@ var updateCreeps = function() {
     }
 };
 
-var depositPheromones = function(creep) {
+var depositPheromones = function(creep)
+{
     Memory.pheromoneTrails[creep.room.name][utils.pos2int(creep.pos)] += 1.0;
 };
 
-var dissipatePheromones = function() {
+var dissipatePheromones = function()
+{
     let dissipationRate = 0.05;
     for (let room in Memory.pheromoneTrails) {
         for (let posint in Memory.pheromoneTrails[room]) {
@@ -85,7 +92,8 @@ var dissipatePheromones = function() {
     }
 };
 
-var createPaths = function() {
+var createPaths = function()
+{
     let pheromoneThreshold = 3.5;
     for (let room in Memory.pheromoneTrails)
         for (let posint in Memory.pheromoneTrails[room])

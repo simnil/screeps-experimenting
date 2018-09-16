@@ -11,7 +11,8 @@ var STATE_UPGRADE = 1;
 
 // FUNCTIONS
 // ---------------------------------------------------------
-var run = function(creep) {
+var run = function(creep)
+{
     if (creep.memory.state == STATE_HARVEST
         && creep.carry.energy < creep.carryCapacity) {
         let source = Game.getObjectById(creep.memory.designatedSource.id);
@@ -29,8 +30,8 @@ var run = function(creep) {
         creep.memory.state = STATE_HARVEST;
 };
 
-
-var spawn = function(spawner) {
+var spawn = function(spawner)
+{
     let testStatus = spawner.spawnCreep(BODY_COMPOSITION, 'dummy',
                                         { dryRun: true });
     if (testStatus != OK) return testStatus;
