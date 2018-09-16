@@ -1,3 +1,10 @@
+// CONSTANTS
+// ---------------------------------------------------------
+var ROOM_SIZE = 50;
+
+
+// FUNCTIONS
+// ---------------------------------------------------------
 var computeSourceDistribution = function(spawner) {
     let cumulativeSourceGains = []; // Gain = 1 / movement cost
     let totalGain = 0;
@@ -31,8 +38,18 @@ var chooseHarvestSource = function(spawner) {
     else return sources[0];
 };
 
-
-module.exports = {
-    computeSourceDistribution: computeSourceDistribution,
-    chooseHarvestSource: chooseHarvestSource
+var pos2int = function(roomPos) {
+    return ROOM_SIZE * roomPos.y + roomPos.x;
 };
+
+var int2pos = function(roomName, i) {
+    let x = i % ROOM_SIZE;
+    let y = Math.floor(i / ROOM_SIZE);
+    return Game.rooms[roomName].getPositionAt(x, y);
+};
+
+
+module.exports = { computeSourceDistribution: computeSourceDistribution,
+                   chooseHarvestSource: chooseHarvestSource,
+                   pos2int: pos2int,
+                   int2pos: int2pos };
