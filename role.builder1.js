@@ -75,11 +75,18 @@ var checkStateTransitionConditions = function(creep, constrSites) {
 var collectEnergy = function(creep) {
     if (creep.memory.closestSource == undefined) {
         let constructionLocation = Game.getObjectById(creep.memory.constrSite.id).pos;
-        creep.memory.closestSource = constructionLocation.findClosestByPath(FIND_SOURCES);
+        creep.memory.closestSource = findClosestSourceFrom(constructionLocation, creep);
     }
     let closestSource = Game.getObjectById(creep.memory.closestSource.id);
     if (creep.harvest(closestSource) == ERR_NOT_IN_RANGE)
         creep.moveTo(closestSource);
+};
+
+var findClosestSourceFrom = function(pos, creep) {
+    let closestSource = pos.findClosestByPath(FIND_SOURCES);
+    if (closestSource == null)
+        closestSource = pos.findClosestByRange(FIND_SOURCES);
+    return closestSource;
 };
 
 var build = function(creep) {
