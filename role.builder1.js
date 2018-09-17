@@ -31,7 +31,6 @@ var run = function(creep)
         console.log('Recycling ' + creep.name);
         creep.memory.state = STATE_RETURN;
         returnAndRecycle(creep);
-        break;
     }
 };
 
