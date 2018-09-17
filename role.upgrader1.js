@@ -1,4 +1,5 @@
 var utils = require('utils');
+var common = require('creep.common');
 
 // CONSTANTS
 // ---------------------------------------------------------
@@ -13,21 +14,33 @@ var STATE_UPGRADE = 1;
 // ---------------------------------------------------------
 var run = function(creep)
 {
-    if (creep.memory.state == STATE_HARVEST
-        && creep.carry.energy < creep.carryCapacity) {
-        let source = Game.getObjectById(creep.memory.designatedSource.id);
-        if (creep.harvest(source) == ERR_NOT_IN_RANGE)
-            creep.moveTo(source);
-    }
-    else {
-        creep.memory.state = STATE_UPGRADE;
-        let controller = creep.room.controller;
-        if (creep.upgradeController(controller) == ERR_NOT_IN_RANGE)
-            creep.moveTo(controller);
-    }
+    checkStateTransitionConditions(creep);
+    switch(creep.memory.state) {
+    case STATE_HARVEST:
+        common.harvestEnergy(creep);
+        break
+    case STATE_UPGRADE:
+        upgradeController(creep);
+        break;
 
-    if (creep.carry.energy == 0)
+    default:
+        common.stateErrorPrint(creep);
+    }
+};
+
+var checkStateTransitionConditions = function(creep)
+{
+    if (creep.carry.energy == creep.carryCapacity)
+        creep.memory.state = STATE_UPGRADE;
+    else if (creep.carry.energy == 0)
         creep.memory.state = STATE_HARVEST;
+};
+
+var upgradeController = function(creep)
+{
+    let controller = creep.room.controller;
+    if (creep.upgradeController(controller) == ERR_NOT_IN_RANGE)
+        creep.moveTo(controller);
 };
 
 var spawn = function(spawner)
