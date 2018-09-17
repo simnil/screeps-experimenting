@@ -85,7 +85,7 @@ var depositPheromones = function(creep)
 
 var dissipatePheromones = function()
 {
-    let dissipationRate = 0.05;
+    let dissipationRate = 0.02;
     for (let room in Memory.pheromoneTrails) {
         for (let posint in Memory.pheromoneTrails[room]) {
             Memory.pheromoneTrails[room][posint] *= 1 - dissipationRate;
