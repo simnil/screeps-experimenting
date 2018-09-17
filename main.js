@@ -49,6 +49,11 @@ var initializePheromoneTrails = function()
     if (Memory.pheromoneTrails == undefined)
         Memory.pheromoneTrails = {};
 
+    for (let s in Game.spawns) {
+        let spawn = Game.spawns[s];
+        if (Memory.pheromoneTrails[spawn.room.name] == undefined)
+            Memory.pheromoneTrails[spawn.room.name] = {};
+    }
     for (let c in Game.creeps) {
         let creep = Game.creeps[c];
         if (Memory.pheromoneTrails[creep.room.name] == undefined)
