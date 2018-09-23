@@ -94,6 +94,8 @@ var dissipatePheromones = function()
                 || Memory.pheromoneTrails[room][posint] == null)
                 delete Memory.pheromoneTrails[room][posint];
         }
+        if (_.keys(Memory.pheromoneTrails[room]).length == 0)
+            delete Memory.pheromoneTrails[room];
     }
 };
 
