@@ -12,7 +12,8 @@ var STATE_RETURN  = 2;
 // ---------------------------------------------------------
 var run = function(creep)
 {
-    let constrSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
+    let homeRoom = Game.getObjectById(creep.memory.home.id).room;
+    let constrSites = homeRoom.find(FIND_MY_CONSTRUCTION_SITES);
     checkStateTransitionConditions(creep, constrSites);
 
     switch (creep.memory.state) {
