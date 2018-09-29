@@ -8,6 +8,7 @@ var roles = { harvester1: require('role.harvester1'),
               upgrader1: require('role.upgrader1'),
               builder1: require('role.builder1') };
 var MAX_NUM_PLANNED_PATHS = 10;
+var MIN_NUM_PLANNED_PATHS = 5;
 
 
 // MAIN LOOP
@@ -28,8 +29,11 @@ var main = function()
 
     updateCreeps();
     evaporatePheromones();
-    if (numberOfPlannedPaths() < MAX_NUM_PLANNED_PATHS)
-        createPaths();
+
+    let numPlannedPaths = numberOfPlannedPathsByRoom();
+    for (let room in numPlannedPaths)
+        if (numPlannedPaths[room] < MIN_NUM_PLANNED_PATHS)
+            createPaths(room, MAX_NUM_PLANNED_PATHS - numPlannedPaths[room]);
 };
 
 
@@ -61,12 +65,19 @@ var initializePheromoneTrails = function()
     }
 };
 
-var numberOfPlannedPaths = function()
+var numberOfPlannedPathsByRoom = function()
 {
-    let roads = Game.spawns['Spawn1'].room.find(FIND_MY_CONSTRUCTION_SITES, {
-        filter: { structureType: STRUCTURE_ROAD }
-    });
-    return roads.length;
+    let plannedPathsInRoom = {};
+    // All rooms containing creeps will have pheromone trails and it's unlikely
+    // that a room without any pheromones will contain a (useful) planned road,
+    // so it will be ignored
+    for (let roomName in Memory.pheromoneTrails) {
+        let roads = Game.rooms[roomName].find(FIND_MY_CONSTRUCTION_SITES, {
+            filter: { structureType: STRUCTURE_ROAD }
+        });
+        plannedPathsInRoom[roomName] = roads.length;
+    }
+    return plannedPathsInRoom;
 };
 
 var updateCreeps = function()
@@ -93,18 +104,22 @@ var evaporatePheromones = function()
     }
 };
 
-var createPaths = function()
+var createPaths = function(roomName, maxNumberOfNewPaths)
 {
     let pheromoneThreshold = 3.5;
-    for (let room in Memory.pheromoneTrails)
-        for (let posint in Memory.pheromoneTrails[room])
-            if (Memory.pheromoneTrails[room][posint] > pheromoneThreshold) {
-                let pos = utils.int2pos(room, posint);
-                let status = Game.rooms[room].createConstructionSite(
-                    pos.x, pos.y, STRUCTURE_ROAD);
-                if (status == OK)
-                    delete Memory.pheromoneTrails[room][posint];
+    for (let posint in Memory.pheromoneTrails[roomName]) {
+        if (maxNumberOfNewPaths == 0)
+            break;
+        if (Memory.pheromoneTrails[roomName][posint] > pheromoneThreshold) {
+            let pos = utils.int2pos(roomName, posint);
+            let status = Game.rooms[roomName].createConstructionSite(
+                pos.x, pos.y, STRUCTURE_ROAD);
+            if (status == OK) {
+                maxNumberOfNewPaths -= 1;
+                delete Memory.pheromoneTrails[roomName][posint];
             }
+        }
+    }
 };
 
 
