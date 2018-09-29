@@ -27,7 +27,7 @@ var main = function()
     }
 
     updateCreeps();
-    dissipatePheromones();
+    evaporatePheromones();
     if (numberOfPlannedPaths() < MAX_NUM_PLANNED_PATHS)
         createPaths();
 };
@@ -83,12 +83,12 @@ var depositPheromones = function(creep)
     Memory.pheromoneTrails[creep.room.name][utils.pos2int(creep.pos)] += 1.0;
 };
 
-var dissipatePheromones = function()
+var evaporatePheromones = function()
 {
-    let dissipationRate = 0.02;
+    let evaporationRate = 0.02;
     for (let room in Memory.pheromoneTrails) {
         for (let posint in Memory.pheromoneTrails[room]) {
-            Memory.pheromoneTrails[room][posint] *= 1 - dissipationRate;
+            Memory.pheromoneTrails[room][posint] *= 1 - evaporationRate;
 
             if (Memory.pheromoneTrails[room][posint] < 0.1
                 || Memory.pheromoneTrails[room][posint] == null)
