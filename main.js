@@ -74,13 +74,7 @@ var updateCreeps = function()
     for (let name in Game.creeps) {
         let creep = Game.creeps[name];
         roles[creep.memory.role].run(creep);
-        depositPheromones(creep);
     }
-};
-
-var depositPheromones = function(creep)
-{
-    Memory.pheromoneTrails[creep.room.name][utils.pos2int(creep.pos)] += 1.0;
 };
 
 var evaporatePheromones = function()

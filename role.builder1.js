@@ -1,3 +1,5 @@
+var common = require('creep.common');
+
 // CONSTANTS
 // ---------------------------------------------------------
 var ROLE_NAME = 'builder1';
@@ -81,8 +83,10 @@ var collectEnergy = function(creep)
         creep.memory.closestSource = findClosestSourceFrom(constructionLocation, creep);
     }
     let closestSource = Game.getObjectById(creep.memory.closestSource.id);
-    if (creep.harvest(closestSource) == ERR_NOT_IN_RANGE)
+    if (creep.harvest(closestSource) == ERR_NOT_IN_RANGE) {
         creep.moveTo(closestSource);
+        common.depositPheromones(creep);
+    }
 };
 
 var findClosestSourceFrom = function(pos, creep)
@@ -96,8 +100,10 @@ var findClosestSourceFrom = function(pos, creep)
 var build = function(creep)
 {
     let constructionTarget = Game.getObjectById(creep.memory.constrSite.id);
-    if (creep.build(constructionTarget) == ERR_NOT_IN_RANGE)
+    if (creep.build(constructionTarget) == ERR_NOT_IN_RANGE) {
         creep.moveTo(constructionTarget);
+        common.depositPheromones(creep);
+    }
 };
 
 var returnAndRecycle = function(creep)
@@ -106,7 +112,10 @@ var returnAndRecycle = function(creep)
     if ((creep.carryCapacity > 0
          && creep.transfer(spawner, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
         || spawner.recycleCreep(creep) == ERR_NOT_IN_RANGE)
+    {
         creep.moveTo(spawner);
+        common.depositPheromones(creep);
+    }
 };
 
 var spawn = function(spawner)

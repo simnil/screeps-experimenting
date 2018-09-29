@@ -48,10 +48,15 @@ var deliverEnergy = function(creep)
         }
     });
     if (targets.length > 0) {
-        if (creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+        if (creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(targets[0]);
+            common.depositPheromones(creep);
+        }
     }
-    else creep.moveTo(Game.getObjectById(creep.memory.home.id));
+    else {
+        creep.moveTo(Game.getObjectById(creep.memory.home.id));
+        common.depositPheromones(creep);
+    }
 
 };
 

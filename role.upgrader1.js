@@ -39,8 +39,10 @@ var checkStateTransitionConditions = function(creep)
 var upgradeController = function(creep)
 {
     let controller = creep.room.controller;
-    if (creep.upgradeController(controller) == ERR_NOT_IN_RANGE)
+    if (creep.upgradeController(controller) == ERR_NOT_IN_RANGE) {
         creep.moveTo(controller);
+        common.depositPheromones(creep);
+    }
 };
 
 var spawn = function(spawner)
