@@ -1,3 +1,6 @@
 # Ignore backup- and temporary autosave files
 *~
 \#*#
+
+# Jupyter stuff
+.ipynb_checkpoints
