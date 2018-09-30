@@ -17,8 +17,8 @@ var harvestEnergy = function(creep)
 {
     let source = Game.getObjectById(creep.memory.designatedSource.id);
     if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-        creep.moveTo(source);
-        depositPheromones(creep);
+        if (creep.moveTo(source) != ERR_NO_PATH)
+            depositPheromones(creep);
     }
 };
 

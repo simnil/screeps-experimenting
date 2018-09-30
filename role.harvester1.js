@@ -49,8 +49,8 @@ var deliverEnergy = function(creep)
     });
     if (targets.length > 0) {
         if (creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(targets[0]);
-            common.depositPheromones(creep);
+            if (creep.moveTo(targets[0]) != ERR_NO_PATH)
+                common.depositPheromones(creep);
         }
     }
     else {

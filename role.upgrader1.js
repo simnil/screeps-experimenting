@@ -40,8 +40,8 @@ var upgradeController = function(creep)
 {
     let controller = creep.room.controller;
     if (creep.upgradeController(controller) == ERR_NOT_IN_RANGE) {
-        creep.moveTo(controller);
-        common.depositPheromones(creep);
+        if (creep.moveTo(controller) != ERR_NO_PATH)
+            common.depositPheromones(creep);
     }
 };
 
