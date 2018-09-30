@@ -72,6 +72,9 @@ var numberOfPlannedPathsByRoom = function()
     // that a room without any pheromones will contain a (useful) planned road,
     // so it will be ignored
     for (let roomName in Memory.pheromoneTrails) {
+        // Can only access rooms with creeps in, so previously visible rooms
+        // might not be visible this tick
+        if (Game.rooms[roomName] == undefined) continue;
         let roads = Game.rooms[roomName].find(FIND_MY_CONSTRUCTION_SITES, {
             filter: { structureType: STRUCTURE_ROAD }
         });
