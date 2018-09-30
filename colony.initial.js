@@ -28,7 +28,7 @@ var maintainMinimumCreepCount = function(spawner)
 {
     for (var i = 0; i < rolePriorityOrder.length; i++) {
         let role = rolePriorityOrder[i];
-        let numCreepsWithRole = _.sum(Game.creeps, (c) => c.memory.role == role);
+        let numCreepsWithRole = utils.countCreepType(role);
 
         if (numCreepsWithRole < minCreeps[role]) {
             let status = roles[role].spawn(spawner);
