@@ -90,7 +90,7 @@ var updateCreeps = function()
 
 var evaporatePheromones = function()
 {
-    let evaporationRate = 0.02;
+    let evaporationRate = 0.01;
     for (let room in Memory.pheromoneTrails) {
         for (let posint in Memory.pheromoneTrails[room]) {
             Memory.pheromoneTrails[room][posint] *= 1 - evaporationRate;
@@ -106,7 +106,7 @@ var evaporatePheromones = function()
 
 var createPaths = function(roomName, maxNumberOfNewPaths)
 {
-    let pheromoneThreshold = 3.5;
+    let pheromoneThreshold = 3.0;
     for (let posint in Memory.pheromoneTrails[roomName]) {
         if (maxNumberOfNewPaths == 0)
             break;
