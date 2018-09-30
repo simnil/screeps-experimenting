@@ -52,8 +52,14 @@ var int2pos = function(roomName, i)
     return Game.rooms[roomName].getPositionAt(x, y);
 };
 
+var countCreepType = function(role)
+{
+    return _.sum(Game.creeps, (c) => c.memory.role == role);
+};
+
 
 module.exports = { computeSourceDistribution: computeSourceDistribution,
                    chooseHarvestSource: chooseHarvestSource,
                    pos2int: pos2int,
-                   int2pos: int2pos };
+                   int2pos: int2pos,
+                   countCreepType: countCreepType };
