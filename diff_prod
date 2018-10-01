@@ -14,4 +14,4 @@ if [ ! -d ${script_dir}/../screeps_live/screeps.com/testing ]; then
     error_message_and_exit "missing production branch"
 fi
 
-meld "${script_dir}"/ "${script_dir}"/../screeps_live/screeps.com/production/
+meld "${script_dir}"/src/ "${script_dir}"/../screeps_live/screeps.com/production/

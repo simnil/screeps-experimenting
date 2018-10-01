@@ -15,4 +15,4 @@ if [ ! -d ${script_dir}/../screeps_live/screeps.com/testing ]; then
 fi
 
 echo Promoting to testing branch...
-cp "${script_dir}"/*.js "${script_dir}"/../screeps_live/screeps.com/testing/
+cp "${script_dir}"/src/*.js "${script_dir}"/../screeps_live/screeps.com/testing/

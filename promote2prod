@@ -15,4 +15,4 @@ if [ ! -d ${script_dir}/../screeps_live/screeps.com/production ]; then
 fi
 
 echo Promoting to production branch...
-cp "${script_dir}"/*.js "${script_dir}"/../screeps_live/screeps.com/production/
+cp "${script_dir}"/src/*.js "${script_dir}"/../screeps_live/screeps.com/production/
