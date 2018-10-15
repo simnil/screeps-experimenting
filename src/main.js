@@ -93,7 +93,7 @@ var updateCreeps = function()
 
 var evaporatePheromones = function()
 {
-    let evaporationRate = 0.01;
+    let evaporationRate = 0.012;
     for (let room in Memory.pheromoneTrails) {
         for (let posint in Memory.pheromoneTrails[room]) {
             Memory.pheromoneTrails[room][posint] *= 1 - evaporationRate;

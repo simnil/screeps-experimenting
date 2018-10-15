@@ -8,9 +8,9 @@ var rolePriorityOrder = ['harvester1', 'upgrader1'];
 var minCreeps = { harvester1: 3,
                   upgrader1: 3,
                   builder1: 3 };
-var maxCreeps = { harvester1: 4,
-                  upgrader1: 6,
-                  builder1: 6 };
+var maxCreeps = { harvester1: 3,
+                  upgrader1: 4,
+                  builder1: 4 };
 
 
 // MAIN LOOP
