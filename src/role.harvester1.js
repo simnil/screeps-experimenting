@@ -49,13 +49,15 @@ var deliverEnergy = function(creep)
     });
     if (targets.length > 0) {
         if (creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-            if (creep.moveTo(targets[0]) != ERR_NO_PATH)
+            let moveStatus = creep.moveTo(targets[0]);
+            if (moveStatus == OK || moveStatus == ERR_TIRED)
                 common.depositPheromones(creep);
         }
     }
     else {
-        creep.moveTo(Game.getObjectById(creep.memory.home.id));
-        common.depositPheromones(creep);
+        let moveStatus = creep.moveTo(Game.getObjectById(creep.memory.home.id));
+        if (moveStatus == OK || moveStatus == ERR_TIRED)
+            common.depositPheromones(creep);
     }
 
 };
