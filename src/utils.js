@@ -57,9 +57,17 @@ var countCreepType = function(role)
     return _.sum(Game.creeps, (c) => c.memory.role == role);
 };
 
+var distanceSquared = function(pos1, pos2)
+{
+    let dx = pos1.x - pos2.x;
+    let dy = pos1.y - pos2.y;
+    return dx*dx + dy*dy;
+};
+
 
 module.exports = { computeSourceDistribution: computeSourceDistribution,
                    chooseHarvestSource: chooseHarvestSource,
                    pos2int: pos2int,
                    int2pos: int2pos,
-                   countCreepType: countCreepType };
+                   countCreepType: countCreepType,
+                   distanceSquared: distanceSquared };

@@ -15,9 +15,17 @@ var stateErrorPrint = function(creep)
 
 var harvestEnergy = function(creep)
 {
-    let source = Game.getObjectById(creep.memory.designatedSource.id);
-    if (creep.harvest(source) == ERR_NOT_IN_RANGE)
-        pheromoveTo(source, creep);
+    const designatedSource = Game.getObjectById(creep.memory.designatedSource.id);
+    const closestDroppedEnergy = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES);
+    if (closestDroppedEnergy != null
+        && (utils.distanceSquared(creep.pos, closestDroppedEnergy.pos)
+            < utils.distanceSquared(creep.pos, designatedSource.pos)))
+    {
+        if (creep.pickup(closestDroppedEnergy) == ERR_NOT_IN_RANGE)
+            pheromoveTo(closestDroppedEnergy, creep);
+    }
+    else if (creep.harvest(designatedSource) == ERR_NOT_IN_RANGE)
+        pheromoveTo(designatedSource, creep);
 };
 
 var pheromoveTo = function(target, creep)
