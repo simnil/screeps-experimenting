@@ -83,11 +83,8 @@ var collectEnergy = function(creep)
         creep.memory.closestSource = findClosestSourceFrom(constructionLocation, creep);
     }
     let closestSource = Game.getObjectById(creep.memory.closestSource.id);
-    if (creep.harvest(closestSource) == ERR_NOT_IN_RANGE) {
-        let moveStatus = creep.moveTo(closestSource);
-        if (moveStatus == OK || moveStatus == ERR_TIRED)
-            common.depositPheromones(creep);
-    }
+    if (creep.harvest(closestSource) == ERR_NOT_IN_RANGE)
+        common.pheromoveTo(closestSource, creep);
 };
 
 var findClosestSourceFrom = function(pos, creep)
@@ -101,11 +98,8 @@ var findClosestSourceFrom = function(pos, creep)
 var build = function(creep)
 {
     let constructionTarget = Game.getObjectById(creep.memory.constrSite.id);
-    if (creep.build(constructionTarget) == ERR_NOT_IN_RANGE) {
-        let moveStatus = creep.moveTo(constructionTarget);
-        if (moveStatus == OK || moveStatus == ERR_TIRED)
-            common.depositPheromones(creep);
-    }
+    if (creep.build(constructionTarget) == ERR_NOT_IN_RANGE)
+        common.pheromoveTo(constructionTarget, creep);
 };
 
 var returnAndRecycle = function(creep)
@@ -115,9 +109,7 @@ var returnAndRecycle = function(creep)
          && creep.transfer(spawner, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
         || spawner.recycleCreep(creep) == ERR_NOT_IN_RANGE)
     {
-        let moveStatus = creep.moveTo(spawner);
-        if (moveStatus == OK || moveStatus == ERR_TIRED)
-            common.depositPheromones(creep);
+        common.pheromoveTo(spawner, creep);
     }
 };
 

@@ -16,12 +16,16 @@ var stateErrorPrint = function(creep)
 var harvestEnergy = function(creep)
 {
     let source = Game.getObjectById(creep.memory.designatedSource.id);
-    if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-        let moveStatus = creep.moveTo(source);
-        if (moveStatus == OK || moveStatus == ERR_TIRED)
-            depositPheromones(creep);
-    }
+    if (creep.harvest(source) == ERR_NOT_IN_RANGE)
+        pheromoveTo(source, creep);
 };
+
+var pheromoveTo = function(target, creep)
+{
+    const moveStatus = creep.moveTo(target);
+    if (moveStatus == OK || moveStatus == ERR_TIRED)
+        depositPheromones(creep);
+}
 
 var depositPheromones = function(creep)
 {
@@ -32,4 +36,5 @@ var depositPheromones = function(creep)
 
 module.exports = { stateErrorPrint: stateErrorPrint,
                    harvestEnergy: harvestEnergy,
+                   pheromoveTo: pheromoveTo,
                    depositPheromones: depositPheromones };

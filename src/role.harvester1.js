@@ -48,17 +48,10 @@ var deliverEnergy = function(creep)
         }
     });
     if (targets.length > 0) {
-        if (creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-            let moveStatus = creep.moveTo(targets[0]);
-            if (moveStatus == OK || moveStatus == ERR_TIRED)
-                common.depositPheromones(creep);
-        }
+        if (creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+            common.pheromoveTo(targets[0], creep);
     }
-    else {
-        let moveStatus = creep.moveTo(Game.getObjectById(creep.memory.home.id));
-        if (moveStatus == OK || moveStatus == ERR_TIRED)
-            common.depositPheromones(creep);
-    }
+    else common.pheromoveTo(Game.getObjectById(creep.memory.home.id), creep);
 
 };
 
