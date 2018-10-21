@@ -59,16 +59,15 @@ var countCreepType = function(role)
 
 var distanceSquared = function(pos1, pos2)
 {
-    let dx = pos1.x - pos2.x;
-    let dy = pos1.y - pos2.y;
+    let dx = pos2.x - pos1.x;
+    let dy = pos2.y - pos1.y;
     return dx*dx + dy*dy;
 };
 
 var directionBetween = function(pos1, pos2)
 {
-    const dx = pos2.x - pos1.x;
-    const dy = pos1.y - pos2.y; // positive y-direction is downward
-    const angle = Math.atan2(dy, dx);
+    const angle = Math.atan2(pos1.y - pos2.y, // positive y-direction is downward
+                             pos2.x - pos1.x);
     const PI_OVER_EIGHT = Math.PI / 8.0;
 
     if (angle >= -PI_OVER_EIGHT && angle < PI_OVER_EIGHT)
