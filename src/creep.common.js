@@ -21,11 +21,24 @@ var harvestEnergy = function(creep)
         && (utils.distanceSquared(creep.pos, closestDroppedEnergy.pos)
             < utils.distanceSquared(creep.pos, designatedSource.pos)))
     {
-        if (creep.pickup(closestDroppedEnergy) == ERR_NOT_IN_RANGE)
+        if (creep.pickup(closestDroppedEnergy) == ERR_NOT_IN_RANGE) {
             pheromoveTo(closestDroppedEnergy, creep);
+            // Might be in range now, so try to pick up again
+            creep.pickup(closestDroppedEnergy);
+        }
     }
-    else if (creep.harvest(designatedSource) == ERR_NOT_IN_RANGE)
-        pheromoveTo(designatedSource, creep);
+    else {
+        const harvestStatus = creep.harvest(designatedSource);
+        if (harvestStatus == ERR_NOT_IN_RANGE) {
+            pheromoveTo(designatedSource, creep);
+            // Might be in range now, so try to harvest again
+            creep.harvest(designatedSource);
+        }
+        else if (harvestStatus == OK)
+            // (Naively) move out of the way so others can harvest
+            creep.move(utils.directionBetween(designatedSource.pos,
+                                              creep.pos));
+    }
 };
 
 var pheromoveTo = function(target, creep)

@@ -64,10 +64,42 @@ var distanceSquared = function(pos1, pos2)
     return dx*dx + dy*dy;
 };
 
+var directionBetween = function(pos1, pos2)
+{
+    const dx = pos2.x - pos1.x;
+    const dy = pos1.y - pos2.y; // positive y-direction is downward
+    const angle = Math.atan2(dy, dx);
+    const PI_OVER_EIGHT = Math.PI / 8.0;
+
+    if (angle >= -PI_OVER_EIGHT && angle < PI_OVER_EIGHT)
+        return RIGHT;
+    else if (angle >= PI_OVER_EIGHT && angle < 3*PI_OVER_EIGHT)
+        return TOP_RIGHT;
+    else if (angle >= 3*PI_OVER_EIGHT && angle < 5*PI_OVER_EIGHT)
+        return TOP;
+    else if (angle >= 5*PI_OVER_EIGHT && angle < 7*PI_OVER_EIGHT)
+        return TOP_LEFT;
+    else if (angle >= 7*PI_OVER_EIGHT || angle < -7*PI_OVER_EIGHT)
+        return LEFT;
+    else if (angle >= -7*PI_OVER_EIGHT && angle < -5*PI_OVER_EIGHT)
+        return BOTTOM_LEFT;
+    else if (angle >= -5*PI_OVER_EIGHT && angle < -3*PI_OVER_EIGHT)
+        return BOTTOM;
+    else if (angle >= -3*PI_OVER_EIGHT && angle < -PI_OVER_EIGHT)
+        return BOTTOM_RIGHT;
+    else {
+        console.error('[utils::directionBetween] ERROR: uncaught case');
+        return RIGHT;
+    }
+
+}
+
 
 module.exports = { computeSourceDistribution: computeSourceDistribution,
                    chooseHarvestSource: chooseHarvestSource,
                    pos2int: pos2int,
                    int2pos: int2pos,
                    countCreepType: countCreepType,
-                   distanceSquared: distanceSquared };
+                   distanceSquared: distanceSquared,
+                   directionBetween: directionBetween,
+                 };
