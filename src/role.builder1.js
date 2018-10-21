@@ -83,8 +83,7 @@ var collectEnergy = function(creep)
         creep.memory.closestSource = findClosestSourceFrom(constructionLocation, creep);
     }
     let closestSource = Game.getObjectById(creep.memory.closestSource.id);
-    if (creep.harvest(closestSource) == ERR_NOT_IN_RANGE)
-        common.pheromoveTo(closestSource, creep);
+    common.harvestEnergy(creep, closestSource);
 };
 
 var findClosestSourceFrom = function(pos, creep)

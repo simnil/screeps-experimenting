@@ -13,9 +13,10 @@ var stateErrorPrint = function(creep)
                 + ', state: ' + creep.memory.state);
 };
 
-var harvestEnergy = function(creep)
+var harvestEnergy = function(creep, designatedSource = null)
 {
-    const designatedSource = Game.getObjectById(creep.memory.designatedSource.id);
+    if (designatedSource == null)
+        designatedSource = Game.getObjectById(creep.memory.designatedSource.id);
     const closestDroppedEnergy = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES);
     if (closestDroppedEnergy != null
         && (utils.distanceSquared(creep.pos, closestDroppedEnergy.pos)
