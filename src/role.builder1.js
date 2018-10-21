@@ -1,13 +1,13 @@
-var common = require('creep.common');
+const common = require('creep.common');
 
 // CONSTANTS
 // ---------------------------------------------------------
-var ROLE_NAME = 'builder1';
-var BODY_COMPOSITION = [WORK, CARRY, MOVE];
+const ROLE_NAME = 'builder1';
+const BODY_COMPOSITION = [WORK, CARRY, MOVE];
 
-var STATE_COLLECT = 0;
-var STATE_BUILD   = 1;
-var STATE_RETURN  = 2;
+const STATE_COLLECT = 0;
+const STATE_BUILD   = 1;
+const STATE_RETURN  = 2;
 
 
 // FUNCTIONS

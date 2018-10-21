@@ -1,13 +1,13 @@
-var utils = require('utils');
-var common = require('creep.common');
+const utils = require('utils');
+const common = require('creep.common');
 
 // CONSTANTS
 // ---------------------------------------------------------
-var ROLE_NAME = 'harvester1';
-var BODY_COMPOSITION = [WORK, CARRY, MOVE];
+const ROLE_NAME = 'harvester1';
+const BODY_COMPOSITION = [WORK, CARRY, MOVE];
 
-var STATE_HARVEST = 0;
-var STATE_DELIVER = 1;
+const STATE_HARVEST = 0;
+const STATE_DELIVER = 1;
 
 
 // FUNCTIONS
