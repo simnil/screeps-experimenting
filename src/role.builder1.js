@@ -5,9 +5,10 @@ const common = require('creep.common');
 const ROLE_NAME = 'builder1';
 const BODY_COMPOSITION = [WORK, CARRY, MOVE];
 
-const STATE_COLLECT = 0;
-const STATE_BUILD   = 1;
-const STATE_RETURN  = 2;
+const STATE_COLLECT   = 0;
+const STATE_BUILD     = 1;
+const STATE_REINFORCE = 2;
+const STATE_RETURN    = 3;
 
 
 // FUNCTIONS
@@ -25,6 +26,9 @@ var run = function(creep)
     case STATE_BUILD:
         build(creep);
         break;
+    case STATE_REINFORCE:
+        reinforce(creep);
+        break;
     case STATE_RETURN:
         returnAndRecycle(creep);
         break;
@@ -39,28 +43,37 @@ var run = function(creep)
 
 var checkStateTransitionConditions = function(creep, constrSites)
 {
-    if (constrSites.length == 0) {
-        creep.memory.state = STATE_RETURN;
-        delete creep.memory.constrSite;
-        delete creep.memory.closestSource;
-    }
-    else if (creep.memory.constrSite == undefined
-             || Game.getObjectById(creep.memory.constrSite.id) == undefined) {
-        creep.memory.constrSite = chooseConstructionSite(creep, constrSites);
-        delete creep.memory.closestSource;
-    }
+    preprocessStateTransitions(creep, constrSites);
 
     switch (creep.memory.state) {
     case STATE_COLLECT:
         if (creep.carry.energy == creep.carryCapacity) {
-            creep.memory.state = STATE_BUILD;
             delete creep.memory.closestSource;
+
+            if (creep.memory.reinforceSite != undefined)
+                creep.memory.state = STATE_REINFORCE;
+            else
+                creep.memory.state = STATE_BUILD;
         }
         break;
+
     case STATE_BUILD:
         if (creep.carry.energy == 0)
             creep.memory.state = STATE_COLLECT;
         break;
+
+    case STATE_REINFORCE:
+        const reinforceSite = Game.getObjectById(creep.memory.reinforceSite.id);
+        if (reinforceSite == null
+            || reinforceSite.hits > Math.min(0.05*reinforceSite.hitsMax, 15e3))
+        {
+            delete creep.memory.reinforceSite;
+            creep.memory.state = STATE_BUILD;
+        }
+        if (creep.carry.energy == 0)
+            creep.memory.state = STATE_COLLECT;
+        break;
+
     case STATE_RETURN:
         if (constrSites.length > 0) {
             if (creep.carry.energy < 0.5 * creep.carryCapacity)
@@ -71,22 +84,75 @@ var checkStateTransitionConditions = function(creep, constrSites)
         break;
 
     default:
-        console.log('State-transition Error');
+        console.error('State-transition error:');
         stateErrorPrint(creep);
     }
 };
 
+var preprocessStateTransitions = function(creep, constrSites)
+{
+    if (constrSites.length == 0
+        && creep.memory.reinforceLocation == undefined
+        && creep.memory.reinforceSite == undefined)
+    {
+        creep.memory.state = STATE_RETURN;
+        delete creep.memory.constrSite;
+        delete creep.memory.closestSource;
+    }
+    else if (creep.memory.constrSite == undefined
+             || Game.getObjectById(creep.memory.constrSite.id) == null)
+    {
+        delete creep.memory.constrSite;
+        delete creep.memory.closestSource;
+
+        if (creep.memory.reinforceSite == undefined
+            && creep.memory.reinforceLocation != undefined)
+        {
+            const reinforceSiteList = Game.rooms[creep.memory.reinforceLocation.roomName].find(
+                FIND_STRUCTURES,
+                { filter: (s) => {
+                    return (shouldBeReinforced(s.structureType)
+                            && (s.pos.x == creep.memory.reinforceLocation.x
+                                && s.pos.y == creep.memory.reinforceLocation.y));
+                }});
+            if (reinforceSiteList.length > 0) {
+                creep.memory.reinforceSite = reinforceSiteList[0];
+                creep.memory.state = STATE_REINFORCE;
+            }
+            delete creep.memory.reinforceLocation;
+        }
+        else if (constrSites.length > 0) {
+            const constrSite = chooseConstructionSite(creep, constrSites);
+            creep.memory.constrSite = constrSite;
+            if (shouldBeReinforced(constrSite.structureType))
+                creep.memory.reinforceLocation = constrSite.pos;
+        }
+    }
+};
+
+var shouldBeReinforced = function(structureType)
+{
+    return (structureType == STRUCTURE_RAMPART
+            || structureType == STRUCTURE_WALL);
+}
+
 var collectEnergy = function(creep)
 {
     if (creep.memory.closestSource == undefined) {
-        let constructionLocation = Game.getObjectById(creep.memory.constrSite.id).pos;
-        creep.memory.closestSource = findClosestSourceFrom(constructionLocation, creep);
+        let workSiteId = "";
+        if (creep.memory.reinforceSite != undefined)
+            workSiteId = creep.memory.reinforceSite.id;
+        else if (creep.memory.constrSite != undefined)
+            workSiteId = creep.memory.constrSite.id;
+        const workSite = Game.getObjectById(workSiteId);
+        const workLocation = (workSite != null) ? workSite.pos : creep.pos;
+        creep.memory.closestSource = findClosestSourceFrom(workLocation);
     }
     let closestSource = Game.getObjectById(creep.memory.closestSource.id);
     common.harvestEnergy(creep, closestSource);
 };
 
-var findClosestSourceFrom = function(pos, creep)
+var findClosestSourceFrom = function(pos)
 {
     let closestSource = pos.findClosestByPath(FIND_SOURCES);
     if (closestSource == null)
@@ -96,15 +162,30 @@ var findClosestSourceFrom = function(pos, creep)
 
 var build = function(creep)
 {
+    if (creep.memory.constrSite == undefined)
+        return;
     let constructionTarget = Game.getObjectById(creep.memory.constrSite.id);
-    if (creep.build(constructionTarget) == ERR_NOT_IN_RANGE)
+    if (creep.build(constructionTarget) == ERR_NOT_IN_RANGE) {
         common.pheromoveTo(constructionTarget, creep);
+        // Might be in range now, try to build again
+        creep.build(constructionTarget);
+    }
+};
+
+var reinforce = function(creep)
+{
+    let reinforceTarget = Game.getObjectById(creep.memory.reinforceSite.id);
+    if (creep.repair(reinforceTarget) == ERR_NOT_IN_RANGE) {
+        common.pheromoveTo(reinforceTarget, creep);
+        // Might be in range now, try to repair again
+        creep.repair(reinforceTarget);
+    }
 };
 
 var returnAndRecycle = function(creep)
 {
     let spawner = Game.getObjectById(creep.memory.home.id);
-    if ((creep.carryCapacity > 0
+    if ((creep.carry.energy > 0
          && creep.transfer(spawner, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
         || spawner.recycleCreep(creep) == ERR_NOT_IN_RANGE)
     {
@@ -114,10 +195,6 @@ var returnAndRecycle = function(creep)
 
 var spawn = function(spawner)
 {
-    let testStatus = spawner.spawnCreep(BODY_COMPOSITION, 'dummy',
-                                        { dryRun: true });
-    if (testStatus != OK) return testStatus;
-
     return spawner.spawnCreep(BODY_COMPOSITION, ROLE_NAME+'-'+Game.time, {
         memory: {
             role:  ROLE_NAME,
@@ -134,9 +211,9 @@ var chooseConstructionSite = function(creep, constrSites)
 
 var stateErrorPrint = function(creep)
 {
-    console.log('State Error: missing state for ' + ROLE_NAME + '. '
-                + 'creep: ' + creep.name
-                + ', state: ' + creep.memory.state);
+    console.error('[STATE ERROR]: missing state for ' + ROLE_NAME + '. '
+                  + 'creep: ' + creep.name
+                  + ', state: ' + creep.memory.state);
 };
 
 
