@@ -6,7 +6,8 @@ var colonies = { initial: require('colony.initial'),
 
 var roles = { harvester1: require('role.harvester1'),
               upgrader1: require('role.upgrader1'),
-              builder1: require('role.builder1') };
+              builder1: require('role.builder1'),
+              maintainer1: require('role.maintainer1') };
 var MAX_NUM_PLANNED_PATHS = 10;
 var MIN_NUM_PLANNED_PATHS = 5;
 
