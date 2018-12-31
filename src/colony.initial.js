@@ -1,17 +1,17 @@
 // MODULES, PARAMETERS, CONSTANTS AND SETS
 // ---------------------------------------------------------
-var utils = require('utils');
-var roles = { harvester1: require('role.harvester1'),
-              upgrader1: require('role.upgrader1') };
+const utils = require('utils');
+const roles = { harvester1: require('role.harvester1'),
+                upgrader1: require('role.upgrader1') };
 
-var rolePriorityOrder = ['harvester1', 'upgrader1'];
-var minCreeps = { harvester1: 2,
-                  upgrader1: 2 };
+const rolePriorityOrder = ['harvester1', 'upgrader1'];
+const minCreeps = { harvester1: 2,
+                    upgrader1: 2 };
 
 
 // MAIN LOOP
 // ---------------------------------------------------------
-var main = function(spawner)
+const main = function(spawner)
 {
     if (spawner.memory.cumulativeSourceDistribution == undefined)
         utils.computeSourceDistribution(spawner);
@@ -24,11 +24,11 @@ var main = function(spawner)
 
 // FUNCTIONS
 // ---------------------------------------------------------
-var maintainMinimumCreepCount = function(spawner)
+const maintainMinimumCreepCount = function(spawner)
 {
-    for (var i = 0; i < rolePriorityOrder.length; i++) {
-        let role = rolePriorityOrder[i];
-        let numCreepsWithRole = utils.countCreepType(role);
+    for (let i = 0; i < rolePriorityOrder.length; i++) {
+        const role = rolePriorityOrder[i];
+        const numCreepsWithRole = utils.countCreepType(role);
 
         if (numCreepsWithRole < minCreeps[role]) {
             let status = roles[role].spawn(spawner);
@@ -40,10 +40,10 @@ var maintainMinimumCreepCount = function(spawner)
     return false;
 };
 
-var spawnExtraCreeps = function(spawner)
+const spawnExtraCreeps = function(spawner)
 {
     if (spawner.room.energyAvailable > 0.9*spawner.room.energyCapacityAvailable) {
-        let status = roles['upgrader1'].spawn(spawner);
+        const status = roles['upgrader1'].spawn(spawner);
         if (status == OK)
             console.log('Spawning extra upgrader1');
     }

@@ -13,10 +13,10 @@ const STATE_RETURN    = 3;
 
 // FUNCTIONS
 // ---------------------------------------------------------
-var run = function(creep)
+const run = function(creep)
 {
-    let homeRoom = Game.getObjectById(creep.memory.home.id).room;
-    let constrSites = homeRoom.find(FIND_MY_CONSTRUCTION_SITES);
+    const homeRoom = Game.getObjectById(creep.memory.home.id).room;
+    const constrSites = homeRoom.find(FIND_MY_CONSTRUCTION_SITES);
     checkStateTransitionConditions(creep, constrSites);
 
     switch (creep.memory.state) {
@@ -41,7 +41,7 @@ var run = function(creep)
     }
 };
 
-var checkStateTransitionConditions = function(creep, constrSites)
+const checkStateTransitionConditions = function(creep, constrSites)
 {
     preprocessStateTransitions(creep, constrSites);
 
@@ -89,7 +89,7 @@ var checkStateTransitionConditions = function(creep, constrSites)
     }
 };
 
-var preprocessStateTransitions = function(creep, constrSites)
+const preprocessStateTransitions = function(creep, constrSites)
 {
     if (constrSites.length == 0
         && creep.memory.reinforceLocation == undefined
@@ -130,13 +130,13 @@ var preprocessStateTransitions = function(creep, constrSites)
     }
 };
 
-var shouldBeReinforced = function(structureType)
+const shouldBeReinforced = function(structureType)
 {
     return (structureType == STRUCTURE_RAMPART
             || structureType == STRUCTURE_WALL);
 }
 
-var collectEnergy = function(creep)
+const collectEnergy = function(creep)
 {
     if (creep.memory.closestSource == undefined) {
         let workSiteId = "";
@@ -148,11 +148,11 @@ var collectEnergy = function(creep)
         const workLocation = (workSite != null) ? workSite.pos : creep.pos;
         creep.memory.closestSource = findClosestSourceFrom(workLocation);
     }
-    let closestSource = Game.getObjectById(creep.memory.closestSource.id);
+    const closestSource = Game.getObjectById(creep.memory.closestSource.id);
     common.harvestEnergy(creep, closestSource);
 };
 
-var findClosestSourceFrom = function(pos)
+const findClosestSourceFrom = function(pos)
 {
     let closestSource = pos.findClosestByPath(FIND_SOURCES);
     if (closestSource == null)
@@ -160,11 +160,11 @@ var findClosestSourceFrom = function(pos)
     return closestSource;
 };
 
-var build = function(creep)
+const build = function(creep)
 {
     if (creep.memory.constrSite == undefined)
         return;
-    let constructionTarget = Game.getObjectById(creep.memory.constrSite.id);
+    const constructionTarget = Game.getObjectById(creep.memory.constrSite.id);
     if (creep.build(constructionTarget) == ERR_NOT_IN_RANGE) {
         common.pheromoveTo(constructionTarget, creep);
         // Might be in range now, try to build again
@@ -172,9 +172,9 @@ var build = function(creep)
     }
 };
 
-var reinforce = function(creep)
+const reinforce = function(creep)
 {
-    let reinforceTarget = Game.getObjectById(creep.memory.reinforceSite.id);
+    const reinforceTarget = Game.getObjectById(creep.memory.reinforceSite.id);
     if (creep.repair(reinforceTarget) == ERR_NOT_IN_RANGE) {
         common.pheromoveTo(reinforceTarget, creep);
         // Might be in range now, try to repair again
@@ -182,9 +182,9 @@ var reinforce = function(creep)
     }
 };
 
-var returnAndRecycle = function(creep)
+const returnAndRecycle = function(creep)
 {
-    let spawner = Game.getObjectById(creep.memory.home.id);
+    const spawner = Game.getObjectById(creep.memory.home.id);
     if ((creep.carry.energy > 0
          && creep.transfer(spawner, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
         || spawner.recycleCreep(creep) == ERR_NOT_IN_RANGE)
@@ -193,7 +193,7 @@ var returnAndRecycle = function(creep)
     }
 };
 
-var spawn = function(spawner)
+const spawn = function(spawner)
 {
     return spawner.spawnCreep(BODY_COMPOSITION, ROLE_NAME+'-'+Game.time, {
         memory: {
@@ -204,12 +204,12 @@ var spawn = function(spawner)
     });
 };
 
-var chooseConstructionSite = function(creep, constrSites)
+const chooseConstructionSite = function(creep, constrSites)
 {
     return constrSites[0]; // TODO
 };
 
-var stateErrorPrint = function(creep)
+const stateErrorPrint = function(creep)
 {
     console.error('[STATE ERROR]: missing state for ' + ROLE_NAME + '. '
                   + 'creep: ' + creep.name

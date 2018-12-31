@@ -12,7 +12,7 @@ const STATE_DELIVER = 1;
 
 // FUNCTIONS
 // ---------------------------------------------------------
-var run = function(creep)
+const run = function(creep)
 {
     checkStateTransitionConditions(creep);
     switch (creep.memory.state) {
@@ -29,7 +29,7 @@ var run = function(creep)
 
 };
 
-var checkStateTransitionConditions = function(creep)
+const checkStateTransitionConditions = function(creep)
 {
     if (creep.carry.energy == creep.carryCapacity)
         creep.memory.state = STATE_DELIVER;
@@ -37,7 +37,7 @@ var checkStateTransitionConditions = function(creep)
         creep.memory.state = STATE_HARVEST;
 };
 
-var deliverEnergy = function(creep)
+const deliverEnergy = function(creep)
 {
     let targets = creep.room.find(FIND_STRUCTURES, {
         filter: (s) => {
@@ -55,7 +55,7 @@ var deliverEnergy = function(creep)
 
 };
 
-var spawn = function(spawner)
+const spawn = function(spawner)
 {
     let testStatus = spawner.spawnCreep(BODY_COMPOSITION, 'dummy',
                                         { dryRun: true });

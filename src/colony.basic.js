@@ -1,19 +1,19 @@
 // MODULES, PARAMETERS, CONSTANTS AND SETS
 // ---------------------------------------------------------
-var utils = require('utils');
-var roles = { harvester1: require('role.harvester1'),
-              upgrader1: require('role.upgrader1'),
-              builder1: require('role.builder1'),
-              maintainer1: require('role.maintainer1') };
-var rolePriorityOrder = ['harvester1', 'upgrader1'];
-var minCreeps = { harvester1: 3,
-                  upgrader1: 3,
-                  builder1: 3,
-                  maintainer1: 1 };
-var maxCreeps = { harvester1: 3,
-                  upgrader1: 4,
-                  builder1: 4,
-                  maintainer1: 2 };
+const utils = require('utils');
+const roles = { harvester1: require('role.harvester1'),
+                upgrader1: require('role.upgrader1'),
+                builder1: require('role.builder1'),
+                maintainer1: require('role.maintainer1') };
+const rolePriorityOrder = ['harvester1', 'upgrader1'];
+const minCreeps = { harvester1: 3,
+                    upgrader1: 3,
+                    builder1: 3,
+                    maintainer1: 1 };
+const maxCreeps = { harvester1: 3,
+                    upgrader1: 4,
+                    builder1: 4,
+                    maintainer1: 2 };
 
 const maintenanceFilter = {
     filter: (s) => {
@@ -28,7 +28,7 @@ const maintenanceFilter = {
 
 // MAIN LOOP
 // ---------------------------------------------------------
-var main = function(spawner)
+const main = function(spawner)
 {
     if (spawner.memory.cumulativeSourceDistribution == undefined)
         utils.computeSourceDistribution(spawner);
@@ -45,14 +45,14 @@ var main = function(spawner)
 
 // FUNCTIONS
 // ---------------------------------------------------------
-var maintainCriticalCreepCount = function(spawner)
+const maintainCriticalCreepCount = function(spawner)
 {
-    for (var i = 0; i < rolePriorityOrder.length; ++i) {
-        let role = rolePriorityOrder[i];
-        let numCreepsWithRole = utils.countCreepType(role);
+    for (let i = 0; i < rolePriorityOrder.length; ++i) {
+        const role = rolePriorityOrder[i];
+        const numCreepsWithRole = utils.countCreepType(role);
 
         if (numCreepsWithRole < minCreeps[role]) {
-            let status = roles[role].spawn(spawner);
+            const status = roles[role].spawn(spawner);
             if (status == OK)
                 console.log('Spawning creep type: ' + role);
             return true;
@@ -61,7 +61,7 @@ var maintainCriticalCreepCount = function(spawner)
     return false;
 };
 
-var maintainMinimumBuilderCount = function(spawner)
+const maintainMinimumBuilderCount = function(spawner)
 {
     if (spawner.room.find(FIND_MY_CONSTRUCTION_SITES).length > 0
         && utils.countCreepType('builder1') < minCreeps['builder1'])
@@ -75,7 +75,7 @@ var maintainMinimumBuilderCount = function(spawner)
     return false;
 };
 
-var maintainMinimumMaintainerCount = function(spawner)
+const maintainMinimumMaintainerCount = function(spawner)
 {
     const repairSites = spawner.room.find(FIND_MY_STRUCTURES, maintenanceFilter);
     if (repairSites.length > 0
@@ -90,7 +90,7 @@ var maintainMinimumMaintainerCount = function(spawner)
     return false;
 };
 
-var spawnExtraCreeps = function(spawner)
+const spawnExtraCreeps = function(spawner)
 {
     const numHarvesters = utils.countCreepType('harvester1');
     const numUpgraders = utils.countCreepType('upgrader1');
@@ -115,7 +115,7 @@ var spawnExtraCreeps = function(spawner)
         creepRole = 'maintainer1';
 
     if (creepRole != null) {
-        let status = roles[creepRole].spawn(spawner);
+        const status = roles[creepRole].spawn(spawner);
         if (status == OK) {
             console.log('Spawning extra ' + creepRole);
             return true;

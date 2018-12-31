@@ -1,27 +1,27 @@
 // MODULES, PARAMETERS, CONSTANTS AND SETS
 // ---------------------------------------------------------
-var utils = require('utils');
-var colonies = { initial: require('colony.initial'),
-                 basic: require('colony.basic') };
+const utils = require('utils');
+const colonies = { initial: require('colony.initial'),
+                   basic: require('colony.basic') };
 
-var roles = { harvester1: require('role.harvester1'),
-              upgrader1: require('role.upgrader1'),
-              builder1: require('role.builder1'),
-              maintainer1: require('role.maintainer1') };
-var MAX_NUM_PLANNED_PATHS = 10;
-var MIN_NUM_PLANNED_PATHS = 5;
+const roles = { harvester1: require('role.harvester1'),
+                upgrader1: require('role.upgrader1'),
+                builder1: require('role.builder1'),
+                maintainer1: require('role.maintainer1') };
+const MAX_NUM_PLANNED_PATHS = 10;
+const MIN_NUM_PLANNED_PATHS = 5;
 
 
 // MAIN LOOP
 // ---------------------------------------------------------
-var main = function()
+const main = function()
 {
     clearDeadCreepsFromMemory();
     initializePheromoneTrails();
 
     for (let spawnerName in Game.spawns) {
-        let spawner = Game.spawns[spawnerName];
-        let controllerLevel = spawner.room.controller.level;
+        const spawner = Game.spawns[spawnerName];
+        const controllerLevel = spawner.room.controller.level;
         if (controllerLevel == 1)
             colonies['initial'].main(spawner);
         else // @incomplete: only 2 stages of a colony
@@ -31,7 +31,7 @@ var main = function()
     updateCreeps();
     evaporatePheromones();
 
-    let numPlannedPaths = numberOfPlannedPathsByRoom();
+    const numPlannedPaths = numberOfPlannedPathsByRoom();
     for (let room in numPlannedPaths)
         if (numPlannedPaths[room] < MIN_NUM_PLANNED_PATHS)
             createPaths(room, MAX_NUM_PLANNED_PATHS - numPlannedPaths[room]);
@@ -40,33 +40,34 @@ var main = function()
 
 // FUNCTIONS
 // ---------------------------------------------------------
-var clearDeadCreepsFromMemory = function()
+const clearDeadCreepsFromMemory = function()
 {
-    for (let name in Memory.creeps)
+    for (let name in Memory.creeps) {
         if (!Game.creeps[name]) {
             delete Memory.creeps[name];
             console.log('Clearing non-existing creep memory: ' + name)
         }
+    }
 };
 
-var initializePheromoneTrails = function()
+const initializePheromoneTrails = function()
 {
     if (Memory.pheromoneTrails == undefined)
         Memory.pheromoneTrails = {};
 
     for (let s in Game.spawns) {
-        let spawn = Game.spawns[s];
+        const spawn = Game.spawns[s];
         if (Memory.pheromoneTrails[spawn.room.name] == undefined)
             Memory.pheromoneTrails[spawn.room.name] = {};
     }
     for (let c in Game.creeps) {
-        let creep = Game.creeps[c];
+        const creep = Game.creeps[c];
         if (Memory.pheromoneTrails[creep.room.name] == undefined)
             Memory.pheromoneTrails[creep.room.name] = {};
     }
 };
 
-var numberOfPlannedPathsByRoom = function()
+const numberOfPlannedPathsByRoom = function()
 {
     let plannedPathsInRoom = {};
     // All rooms containing creeps will have pheromone trails and it's unlikely
@@ -76,7 +77,7 @@ var numberOfPlannedPathsByRoom = function()
         // Can only access rooms with creeps in, so previously visible rooms
         // might not be visible this tick
         if (Game.rooms[roomName] == undefined) continue;
-        let roads = Game.rooms[roomName].find(FIND_MY_CONSTRUCTION_SITES, {
+        const roads = Game.rooms[roomName].find(FIND_MY_CONSTRUCTION_SITES, {
             filter: { structureType: STRUCTURE_ROAD }
         });
         plannedPathsInRoom[roomName] = roads.length;
@@ -84,17 +85,17 @@ var numberOfPlannedPathsByRoom = function()
     return plannedPathsInRoom;
 };
 
-var updateCreeps = function()
+const updateCreeps = function()
 {
     for (let name in Game.creeps) {
-        let creep = Game.creeps[name];
+        const creep = Game.creeps[name];
         roles[creep.memory.role].run(creep);
     }
 };
 
-var evaporatePheromones = function()
+const evaporatePheromones = function()
 {
-    let evaporationRate = 0.012;
+    const evaporationRate = 0.012;
     for (let room in Memory.pheromoneTrails) {
         for (let posint in Memory.pheromoneTrails[room]) {
             Memory.pheromoneTrails[room][posint] *= 1 - evaporationRate;
@@ -108,15 +109,15 @@ var evaporatePheromones = function()
     }
 };
 
-var createPaths = function(roomName, maxNumberOfNewPaths)
+const createPaths = function(roomName, maxNumberOfNewPaths)
 {
-    let pheromoneThreshold = 3.0;
+    const pheromoneThreshold = 3.0;
     for (let posint in Memory.pheromoneTrails[roomName]) {
         if (maxNumberOfNewPaths == 0)
             break;
         if (Memory.pheromoneTrails[roomName][posint] > pheromoneThreshold) {
-            let pos = utils.int2pos(roomName, posint);
-            let status = Game.rooms[roomName].createConstructionSite(
+            const pos = utils.int2pos(roomName, posint);
+            const status = Game.rooms[roomName].createConstructionSite(
                 pos.x, pos.y, STRUCTURE_ROAD);
             if (status == OK) {
                 maxNumberOfNewPaths -= 1;

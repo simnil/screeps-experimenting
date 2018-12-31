@@ -12,7 +12,7 @@ const STATE_UPGRADE = 1;
 
 // FUNCTIONS
 // ---------------------------------------------------------
-var run = function(creep)
+const run = function(creep)
 {
     checkStateTransitionConditions(creep);
     switch(creep.memory.state) {
@@ -28,7 +28,7 @@ var run = function(creep)
     }
 };
 
-var checkStateTransitionConditions = function(creep)
+const checkStateTransitionConditions = function(creep)
 {
     if (creep.carry.energy == creep.carryCapacity)
         creep.memory.state = STATE_UPGRADE;
@@ -36,17 +36,17 @@ var checkStateTransitionConditions = function(creep)
         creep.memory.state = STATE_HARVEST;
 };
 
-var upgradeController = function(creep)
+const upgradeController = function(creep)
 {
-    let controller = creep.room.controller;
+    const controller = creep.room.controller;
     if (creep.upgradeController(controller) == ERR_NOT_IN_RANGE)
         common.pheromoveTo(controller, creep);
 };
 
-var spawn = function(spawner)
+const spawn = function(spawner)
 {
-    let testStatus = spawner.spawnCreep(BODY_COMPOSITION, 'dummy',
-                                        { dryRun: true });
+    const testStatus = spawner.spawnCreep(BODY_COMPOSITION, 'dummy',
+                                          { dryRun: true });
     if (testStatus != OK) return testStatus;
 
     return spawner.spawnCreep(BODY_COMPOSITION, ROLE_NAME+'-'+Game.time, {

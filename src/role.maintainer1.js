@@ -18,7 +18,7 @@ var run = function(creep)
     const homeRoom = Game.getObjectById(creep.memory.home.id).room;
     // TODO create structure priorities or prioritise structures based on health
     // percentage or something
-    let repairSites = homeRoom.find(FIND_MY_STRUCTURES, {
+    const repairSites = homeRoom.find(FIND_MY_STRUCTURES, {
         filter: (s) => {
             if (s.structureType == STRUCTURE_RAMPART)
                 return s.hits < 30000;
@@ -113,7 +113,7 @@ var preprocessStateTransitions = function(creep, repairSites)
 var collectEnergy = function(creep)
 {
     if (creep.memory.closestSource == undefined) {
-        let repairLocation = Game.getObjectById(creep.memory.repairSite.id).pos;
+        const repairLocation = Game.getObjectById(creep.memory.repairSite.id).pos;
         creep.memory.closestSource = findClosestSourceFrom(repairLocation);
     }
     let closestSource = Game.getObjectById(creep.memory.closestSource.id);

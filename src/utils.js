@@ -1,11 +1,11 @@
 // CONSTANTS
 // ---------------------------------------------------------
-var ROOM_SIZE = 50;
+const ROOM_SIZE = 50;
 
 
 // FUNCTIONS
 // ---------------------------------------------------------
-var computeSourceDistribution = function(spawner)
+const computeSourceDistribution = function(spawner)
 {
     let cumulativeSourceGains = []; // Gain = 1 / movement cost
     let totalGain = 0;
@@ -27,44 +27,44 @@ var computeSourceDistribution = function(spawner)
     spawner.memory.cumulativeSourceDistribution = cumulativeSourceGains;
 };
 
-var chooseHarvestSource = function(spawner)
+const chooseHarvestSource = function(spawner)
 {
-    var sources = spawner.room.find(FIND_SOURCES);
+    const sources = spawner.room.find(FIND_SOURCES);
     if (spawner.memory.cumulativeSourceDistribution != undefined) {
-        let r = Math.random();
-        let cumSrcDist = spawner.memory.cumulativeSourceDistribution;
-        for (let i = 0; i < cumSrcDist.length; i++)
+        const r = Math.random();
+        const cumSrcDist = spawner.memory.cumulativeSourceDistribution;
+        for (let i = 0; i < cumSrcDist.length; ++i)
             if (r < cumSrcDist[i])
                 return sources[i];
     }
     else return sources[0];
 };
 
-var pos2int = function(roomPos)
+const pos2int = function(roomPos)
 {
     return ROOM_SIZE * roomPos.y + roomPos.x;
 };
 
-var int2pos = function(roomName, i)
+const int2pos = function(roomName, i)
 {
-    let x = i % ROOM_SIZE;
-    let y = Math.floor(i / ROOM_SIZE);
+    const x = i % ROOM_SIZE;
+    const y = Math.floor(i / ROOM_SIZE);
     return Game.rooms[roomName].getPositionAt(x, y);
 };
 
-var countCreepType = function(role)
+const countCreepType = function(role)
 {
     return _.sum(Game.creeps, (c) => c.memory.role == role);
 };
 
-var distanceSquared = function(pos1, pos2)
+const distanceSquared = function(pos1, pos2)
 {
-    let dx = pos2.x - pos1.x;
-    let dy = pos2.y - pos1.y;
+    const dx = pos2.x - pos1.x;
+    const dy = pos2.y - pos1.y;
     return dx*dx + dy*dy;
 };
 
-var directionBetween = function(pos1, pos2)
+const directionBetween = function(pos1, pos2)
 {
     const angle = Math.atan2(pos1.y - pos2.y, // positive y-direction is downward
                              pos2.x - pos1.x);
@@ -94,11 +94,11 @@ var directionBetween = function(pos1, pos2)
 }
 
 
-module.exports = { computeSourceDistribution: computeSourceDistribution,
-                   chooseHarvestSource: chooseHarvestSource,
-                   pos2int: pos2int,
-                   int2pos: int2pos,
+module.exports = { chooseHarvestSource: chooseHarvestSource,
+                   computeSourceDistribution: computeSourceDistribution,
                    countCreepType: countCreepType,
-                   distanceSquared: distanceSquared,
                    directionBetween: directionBetween,
+                   distanceSquared: distanceSquared,
+                   int2pos: int2pos,
+                   pos2int: pos2int,
                  };

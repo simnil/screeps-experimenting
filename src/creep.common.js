@@ -1,4 +1,4 @@
-var utils = require('utils');
+const utils = require('utils');
 
 // CONSTANTS
 // ---------------------------------------------------------
@@ -6,14 +6,14 @@ var utils = require('utils');
 
 // FUNCTIONS
 // ---------------------------------------------------------
-var stateErrorPrint = function(creep)
+const stateErrorPrint = function(creep)
 {
     console.log('State Error: missing state for ' + ROLE_NAME + '. '
                 + 'creep: ' + creep.name
                 + ', state: ' + creep.memory.state);
 };
 
-var harvestEnergy = function(creep, designatedSource = null)
+const harvestEnergy = function(creep, designatedSource = null)
 {
     if (designatedSource == null)
         designatedSource = Game.getObjectById(creep.memory.designatedSource.id);
@@ -42,14 +42,14 @@ var harvestEnergy = function(creep, designatedSource = null)
     }
 };
 
-var pheromoveTo = function(target, creep)
+const pheromoveTo = function(target, creep)
 {
     const moveStatus = creep.moveTo(target);
     if (moveStatus == OK || moveStatus == ERR_TIRED)
         depositPheromones(creep);
 }
 
-var depositPheromones = function(creep)
+const depositPheromones = function(creep)
 {
     if (Memory.pheromoneTrails[creep.room.name] == undefined)
         Memory.pheromoneTrails[creep.room.name] = {};
